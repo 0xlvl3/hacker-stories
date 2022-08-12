@@ -1,23 +1,5 @@
 import * as React from "react";
 
-const list = [
-  {
-    title: "React",
-    url: "https://reactjs.org/",
-    author: "Jordan Walke",
-    num_comments: 3,
-    points: 4,
-    objectID: 0,
-  },
-  {
-    title: "Redux",
-    url: "https://redux.js.org/",
-    author: "Dan Abramov, Andrew Clark",
-    num_comments: 2,
-    points: 4,
-    objectID: 0,
-  },
-];
 const numArr = [1, 2, 3, 4];
 const exponentialNumbers = numArr.map((number) => number * number);
 console.log(exponentialNumbers);
@@ -27,14 +9,34 @@ console.log(exponentialNumbers);
  * @returns renders to the browser
  */
 const App = () => {
+  const stories = [
+    {
+      title: "React",
+      url: "https://reactjs.org/",
+      author: "Jordan Walke",
+      num_comments: 3,
+      points: 4,
+      objectID: 0,
+    },
+    {
+      title: "Redux",
+      url: "https://redux.js.org/",
+      author: "Dan Abramov, Andrew Clark",
+      num_comments: 2,
+      points: 4,
+      objectID: 1,
+    },
+  ];
+
   return (
     <div>
       <h1>My Hacker Stories</h1>
+
       <Search />
+
       <hr />
 
-      <Item />
-      <List />
+      <List list={stories} />
     </div>
   );
 };
@@ -45,11 +47,7 @@ const App = () => {
  * @returns Renders a search bar
  */
 const Search = () => {
-  const handleFocus = (e) => {
-    console.log(e);
-    console.log(`Focused`);
-  };
-
+  //handler for an event
   const handleChange = (event) => {
     //synthetic event
     console.log(event);
@@ -58,11 +56,16 @@ const Search = () => {
     console.log(event.target.value);
   };
 
+  //onChange here is our handleChange event
   return (
     <div>
       <label htmlFor="search"> Search: </label>
-      <input id="search" type="text" onChange={handleChange} />
-      <input id="search" type="text" onFocus={handleFocus} />
+      <input
+        id="search"
+        type="text"
+        onChange={handleChange}
+        onBlur={handleChange}
+      />
     </div>
   );
 };
@@ -71,35 +74,23 @@ const Search = () => {
  * React component
  * @returns Will render the items out of our list object
  */
-const Item = () => {
-  return (
-    <ul>
-      {list.map((item) => (
-        <li key={item.objectID}>
-          <span>
-            <a href={item.url}>{item.title}</a>
-          </span>
-          <br />
-          <span>{item.author}</span>
-          <br />
-          <span>{item.num_comments}</span>
-          <br />
-          <span>{item.points}</span>
-        </li>
-      ))}
-    </ul>
-  );
-};
+const List = (props) => (
+  <ul>
+    {props.list.map((item) => (
+      <Item key={item.objectID} item={item} />
+    ))}
+  </ul>
+);
 
-const List = () => {
-  return (
-    <ol>
-      <li>1</li>
-      <li>2</li>
-      <li>3</li>
-      <li>Right</li>
-    </ol>
-  );
-};
+const Item = (props) => (
+  <li>
+    <span>
+      <a href={props.item.url}>{props.item.title}</a>
+    </span>
+    <span>{props.item.author}</span>
+    <span>{props.item.num_comments}</span>
+    <span>{props.item.points}</span>
+  </li>
+);
 
 export default App;
