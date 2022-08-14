@@ -1,9 +1,5 @@
 import * as React from "react";
 
-const numArr = [1, 2, 3, 4];
-const exponentialNumbers = numArr.map((number) => number * number);
-console.log(exponentialNumbers);
-
 /**
  *
  * @returns renders to the browser
@@ -28,18 +24,27 @@ const App = () => {
     },
   ];
 
-  console.log(`App renders`);
+  // console.log(`App renders`);
+
+  const [searchTerm, setSearchTerm] = React.useState("React"); //declare state within component which depend on the state can read (via props) and update (via callback handler)
+
+  const handleSearch = (event) => {
+    setSearchTerm(event.target.value);
+  };
+
+  const searchStories = stories.filter((story) => {
+    return story.title.toLowerCase().includes(searchTerm.toLowerCase());
+  });
 
   return (
     <div>
       <h1>My Hacker Stories</h1>
 
-      <Search />
+      <Search search={searchTerm} onSearch={handleSearch} />
 
       <hr />
-
-      <Test words={"This is a test"} myColor="red" />
-      <List list={stories} />
+      <List list={searchStories} />
+      {/* <Test words={"This is a test"} myColor="red" /> */}
     </div>
   );
 };
@@ -49,58 +54,56 @@ const App = () => {
  * React component using React State
  * @returns Renders a search bar
  */
-const Search = () => {
-  console.log("Search renders");
-  const [searchTerm, setSerachTerm] = React.useState("");
-
-  //handler for an event
-  const handleChange = (event) => {
-    //synthetic event
-    console.log(event);
-
-    //value of target (here: element), using setSearchTerm() with useState we can now see our typed input below the search box.
-    setSerachTerm(event.target.value);
-  };
-
-  //onChange here is our handleChange event
+const Search = ({ search, onSearch }) => {
   return (
     <div>
       <label htmlFor="search"> Search: </label>
-      <input id="search" type="text" onChange={handleChange} />
-      <p>
-        Searching for <strong>{searchTerm}</strong>
-      </p>
+      <input id="search" type="text" value={search} onChange={onSearch} />
     </div>
   );
 };
+//handler for an event
+// const handleChange = (event) => {
+//   //synthetic event
+//   // console.log(event);
+
+//   //value of target (here: element), using setSearchTerm() with useState we can now see our typed input below the search box.
+//   setSearchTerm(event.target.value);
+
+//   props.onSearch(event);
+
+//onChange here is our handleChange event
+// return (
+//   <div>
+//     <label htmlFor="search"> Search: </label>
+//     <input id="search" type="text" onChange={props.onSearch} />
+//     <p>
+//       Searching for <strong>{searchTerm}</strong>
+//     </p>
+//   </div>
+// );
 
 /**
  * React component
  * @returns Will render the items out of our list object
  */
-const List = (props) => (
-  console.log("List renders"),
-  (
-    <ul>
-      {props.list.map((item) => (
-        <Item key={item.objectID} item={item} />
-      ))}
-    </ul>
-  )
+const List = ({ list }) => (
+  <ul>
+    {list.map((item) => (
+      <Item key={item.objectID} item={item} />
+    ))}
+  </ul>
 );
 
-const Item = (props) => (
-  console.log("Item renders"),
-  (
-    <li>
-      <span>
-        <a href={props.item.url}>{props.item.title}</a>
-      </span>
-      <span>{props.item.author}</span>
-      <span>{props.item.num_comments}</span>
-      <span>{props.item.points}</span>
-    </li>
-  )
+const Item = ({ item }) => (
+  <li>
+    <span>
+      <a href={item.url}>{item.title}</a>
+    </span>
+    <span>{item.author}</span>
+    <span>{item.num_comments}</span>
+    <span>{item.points}</span>
+  </li>
 );
 
 /*
@@ -123,11 +126,12 @@ const Test = (props) => {
 const Test = ({ words }) => {
   return <p>{words}</p>;
 };
-*/
 
 //destructing multiple props within one
 const Test = ({ words, myColor }) => {
   return <p style={{ color: myColor }}>{words}</p>;
 };
+
+*/
 
 export default App;
